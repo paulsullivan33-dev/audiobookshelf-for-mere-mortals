@@ -1,0 +1,78 @@
+Audiobookshelf commands — the cheat sheet
+====================================================================
+On a normal machine the install is the
+official image and one compose command
+(chapter 3). The API calls below are the
+ones this guide's lab ran against the
+real server; criteria.md keeps the
+ledger of which were run and which are
+the documented form.
+
+The standing install (Docker route)
+    docker compose up -d
+    docker compose ps
+    docker compose down            (folders stay; containers go)
+    docker compose pull            (then up -d again, to upgrade)
+
+First look
+    curl http://localhost:13378/status
+        -> {"app":"audiobookshelf","serverVersion":"2.37.1",
+            "isInit":false,...}     (false until chapter 4 is done)
+
+The first account (one time only; plain-text answer)
+    POST /init                     {"newRoot":{"username":...,
+                                    "password":...}}  -> "OK"
+                                   (a second run answers 500)
+
+Sign in (the token is the key; keep it out of scripts you share)
+    POST /login                    username + password
+        -> {"user": {..., "token": "<token>"},
+            "serverSettings": {"version": "2.37.1", ...}}
+
+The API the players use (Authorization: Bearer <token>)
+    GET  /api/libraries            an OBJECT holding "libraries",
+                                   not a bare array
+    POST /api/libraries            create one (name, mediaType,
+                                   folders, provider)
+    POST /api/libraries/{id}/scan  scan it now
+    GET  /api/libraries/{id}/items what's on the shelf
+    GET  /api/items/{id}?expanded=1
+                                   one item, files and chapters
+    GET  /api/items/{id}/file/{ino}
+                                   stream a file (Range works)
+    POST /api/items/{id}/play      open a playback session
+    POST /api/session/{id}/sync    report your position
+    POST /api/session/{id}/close   finish the session
+    GET  /api/me/progress/{id}     read a position back
+    GET  /api/me                   your account incl. all progress
+
+People (root/admin only)
+    POST  /api/users               create a user — then check
+                                   accessAllLibraries: it defaults
+                                   to true and overrides the list
+    PATCH /api/users/{id}          e.g. turn accessAllLibraries off
+
+Podcasts
+    POST /api/podcasts/feed        {"rssFeed": "<url>"} -> preview
+    POST /api/podcasts             create (its episodesToDownload
+                                   list is ignored in v2.37.1)
+    POST /api/podcasts/{id}/download-episodes
+                                   the route that actually fetches
+    POST /api/podcasts/{id}/checknew
+                                   look for newer episodes (older
+                                   ones are not backfilled)
+
+Backup (chapter 11 — the server's half)
+    POST /api/backups              one file appears in
+                                   <METADATA_PATH>/backups/
+    ls <METADATA_PATH>/backups/    verify it exists; then back up
+                                   the media folders separately
+
+Environment the package route reads
+    CONFIG_PATH     settings store (users, libraries)
+    METADATA_PATH   database, covers, backups, logs
+    PORT            13378 in this guide
+    FFMPEG_PATH / FFPROBE_PATH     only if you must supply the
+                                   required 5.1.x builds yourself
+    SSRF_REQUEST_FILTER_WHITELIST  hosts the server may fetch
+                                   inside your network (feeds)

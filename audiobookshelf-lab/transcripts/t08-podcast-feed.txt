@@ -1,0 +1,20 @@
+$ POST /api/podcasts/feed {"rssFeed": "http://127.0.0.1:8899/feed.xml"}
+-> HTTP 200
+  title: The Night Ferry | author: The Almanac Workshop | episodes in feed: 2
+   ep: "Episode One - Departures" | enclosure: http://127.0.0.1:8899/ep1.mp3
+   ep: "Episode Two - The Crossing" | enclosure: http://127.0.0.1:8899/ep2.mp3
+
+Getting here took one discovery: the server's SSRF request
+filter blocks calls to 127.0.0.1 by default. The lab server
+was restarted with SSRF_REQUEST_FILTER_WHITELIST=127.0.0.1
+before this parse succeeded. A feed on a real host needs no
+whitelist entry.
+
+Creating the podcast (POST /api/podcasts) made the item, but
+the episodesToDownload list in the create call was silently
+ignored by v2.37.1 — see t09 for the route that works.
+
+$ GET /api/items/45aa77f7-9ea4-4398-b49d-620946e9a75b?expanded=1 -> HTTP 200
+  "The Night Ferry" — episodes now on the server:
+   - "Episode One - Departures" duration 240.04s, file ino 11639095
+   - "Episode Two - The Crossing" duration 240.04s, file ino 11639099

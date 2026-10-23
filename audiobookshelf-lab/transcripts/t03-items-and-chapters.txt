@@ -1,0 +1,23 @@
+== The Lantern Keeper's Daughter — four mp3 files, no embedded chapters
+$ GET /api/items/3b11f2d9-5b3c-4a13-a299-6338a8fa61ed?expanded=1 -> HTTP 200
+   title: The Lantern Keeper's Daughter | authors: ['Imogen Hartley'] | publishedYear: 2024 | duration: 480.13s
+   file 1: 01 - Chapter One.mp3 — 120.03s (ino 11601074)
+   file 2: 02 - Chapter Two.mp3 — 120.03s (ino 11601075)
+   file 3: 03 - Chapter Three.mp3 — 120.03s (ino 11601077)
+   file 4: 04 - Chapter Four.mp3 — 120.03s (ino 11601078)
+   chapter: "Chapter One" 0 -> 120.032653
+   chapter: "Chapter Two" 120.032653 -> 240.065306
+   chapter: "Chapter Three" 240.065306 -> 360.097959
+   chapter: "Chapter Four" 360.097959 -> 480.130612
+
+== A Field Guide to Tides — one m4b, three embedded chapters
+$ GET /api/items/86afe93d-d56d-4c68-9537-f5c7c2cefdcf?expanded=1 -> HTTP 200
+   title: A Field Guide to Tides | authors: ['Tomas Reyes'] | publishedYear: 2023 | duration: 135s
+   file 1: A Field Guide to Tides.m4b — 135s (ino 11601094)
+   chapter: "Reading the Water" 0 -> 45
+   chapter: "The Turning" 45 -> 90
+   chapter: "What the Shore Keeps" 90 -> 135
+
+The multi-file book got its chapters synthesised by the server,
+tiling the four files end to end (0 -> 480.13s). The m4b's three
+embedded chapters came back exactly as written into the file.

@@ -1,0 +1,12 @@
+$ curl -s http://localhost:13378/api/items/3b11f2d9-5b3c-4a13-a299-6338a8fa61ed/file/11601074 -H 'Authorization: Bearer <redacted>' -o served.mp3
+HTTP 200, 960708 bytes, Content-Type: audio/mpeg
+sha256 of served bytes : 6e040970690aeb9d94921e017aeae1942fac1350e9c3cd0d5cb249511d72e1be
+sha256 of file on disk : 6e040970690aeb9d94921e017aeae1942fac1350e9c3cd0d5cb249511d72e1be
+identical: True
+
+$ curl -s -H 'Range: bytes=10000-10999' (same URL)
+HTTP 206, 1000 bytes, Content-Range: bytes 10000-10999/960708
+slice identical to disk[10000:11000]: True
+
+The API serves the file itself, byte for byte, and honours
+Range requests — the mechanism players use to seek.

@@ -1,0 +1,116 @@
+Lab notes — Audiobookshelf for Mere Mortals
+====================================================================
+Kept while building the guide, so the
+claims in the chapters can be traced to
+what actually happened on the bench.
+
+Server under test
+    Audiobookshelf v2.37.1, GitHub release
+    published 2026-09-29. Installed from
+    the project's own apt repository:
+    audiobookshelf_2.37.1_amd64.deb from
+    advplyr.github.io/audiobookshelf-ppa,
+    SHA-256 25804f60fa14c29c36dca43ec68f8
+    191b4c702e44218ab6f1ee50a6473cdcb2a,
+    verified against the repo's Packages
+    index before use.
+
+How it ran here (deviation, declared)
+    The sandbox kernel has no container
+    runtime and no systemd, so the .deb
+    was unpacked and its program run
+    directly with CONFIG_PATH,
+    METADATA_PATH, and PORT=13378 set.
+    The package ships no ffmpeg; the
+    server normally downloads the static
+    builds it wants on first run, but
+    sandbox downloads failed, so the
+    official ffmpeg/ffprobe 5.1.1 static
+    builds and libnusqlite3 were placed
+    by hand and named via FFMPEG_PATH,
+    FFPROBE_PATH, NUSQLITE3_PATH.
+
+The ffmpeg rule (measured)
+    System ffmpeg was 8.1.2. The server
+    rejected it: BinaryManager accepts
+    only 5.1.x. With the 5.1.1 builds in
+    place everything worked. This is a
+    real install gotcha, not a sandbox
+    artefact — chapter 15 carries it.
+
+Fixtures (all invented, all generated)
+    examples/generate-fixtures.sh makes:
+    - "The Lantern Keeper's Daughter" by
+      Imogen Hartley: 4 x 120s mp3 chapter
+      files, fully tagged.
+    - "A Field Guide to Tides" by Tomas
+      Reyes: one 135s m4b with 3 embedded
+      chapters (45s each).
+    - "Quiet Hours" by Wren Okafor: one
+      180s mp3, in the second library for
+      the fencing test.
+    - "The Night Ferry" podcast: 2 x 240s
+      episodes plus feed.xml, served on
+      127.0.0.1:8899. Feed dates are Oct
+      2025 — deliberately older than the
+      lab clock, which is what exposed
+      the no-backfill behaviour.
+
+People (invented)
+    maren — root (first account, /init).
+    theo  — ordinary user, Audiobooks
+    library only, after the PATCH below.
+
+Surprises worth the troubleshooting page
+    - POST /init answers plain text and
+      500s once an admin exists.
+    - GET /api/authorize is 404 in v2.37
+      (auth reworked in 2.26); login
+      tokens are the way in.
+    - GET /api/libraries returns an
+      object, not an array.
+    - New users default to
+      accessAllLibraries=true; theo saw
+      everything until PATCHed. After
+      the PATCH: private item 403,
+      private items list 403.
+    - Feed fetch to 127.0.0.1 blocked by
+      the SSRF filter; fixed with
+      SSRF_REQUEST_FILTER_WHITELIST=
+      127.0.0.1 (matches hostname).
+    - Creating a podcast does not
+      backfill episodes older than the
+      add, and v2.37.1's create silently
+      ignores episodesToDownload. The
+      working route is
+      POST /api/podcasts/{id}/download-episodes.
+    - Downloads rewrite episode ID3
+      (+341 bytes on episode one), so
+      compare streams against the file
+      on disk, not the enclosure.
+    - Expanded item view in v2.37:
+      media.audioFiles carry ino/index/
+      metadata.path/duration; authors
+      arrive as media.metadata.authors[]
+      with the display name not in the
+      field a script would first try.
+
+Numbers the chapters quote
+    Lantern book total 480.130612s from
+    four 120.03s files. Chapter file
+    960,708 bytes, stream SHA-256 equal
+    to disk; range slice equal. Progress
+    185.0s -> 0.3853, unchanged across a
+    kill and restart. Episode one
+    duration 240.04s; enclosure 1,920,661
+    bytes -> stored 1,921,002. First
+    backup file 21,609 bytes.
+
+Transcripts
+    audiobookshelf-lab/transcripts/
+    t00..t10, captured from the running
+    server; tokens and passwords
+    redacted. Read-backs were re-run on
+    a restarted server (which is what
+    makes t06 a restart proof rather
+    than a claim).

@@ -1,0 +1,9 @@
+$ POST /api/backups -> HTTP 200 {"backups":[{"id":"2026-10-23T0049","key":"sqlite","backupDirPath":"/home/hatch/workspace/audiobooks
+
+$ ls <METADATA_PATH>/backups/
+   2026-10-23T0049.audiobookshelf  (23642 bytes)
+   2026-10-23T0050.audiobookshelf  (23821 bytes)
+
+One file holds the whole server state — users, libraries,
+progress. The media files themselves are not in it; they
+are backed up as ordinary files (chapter 11).

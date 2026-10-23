@@ -1,0 +1,18 @@
+$ POST /api/podcasts/<id>/download-episodes  (the two feed episode objects)
+-> HTTP 200; the server log records:
+   [PodcastManager] Successfully downloaded podcast episode "Episode One - Departures"
+   [PodcastManager] Successfully downloaded podcast episode "Episode Two - The Crossing"
+
+$ ls media/Podcasts/The Night Ferry/
+   Episode One - Departures.mp3, Episode Two - The Crossing.mp3
+
+$ GET /api/items/45aa77f7-9ea4-4398-b49d-620946e9a75b/file/11639095 (stream episode one back) -> HTTP 200, 1921002 bytes
+sha256 streamed        : 7a73de6d6aae0a6aeb67eab3ba48550d91a8867f6586cdf88b20777b364a560b
+sha256 downloaded file : 7a73de6d6aae0a6aeb67eab3ba48550d91a8867f6586cdf88b20777b364a560b
+identical: True
+
+The enclosure file in the fixture feed is 1920661 bytes; the downloaded
+file is 1921002 bytes. Audiobookshelf rewrites the episode's ID3 tags as
+it downloads (podcast flag, sort tags, description into the comment
+field), so the stored file is slightly larger than the enclosure.
+What streams is the stored file, exactly.

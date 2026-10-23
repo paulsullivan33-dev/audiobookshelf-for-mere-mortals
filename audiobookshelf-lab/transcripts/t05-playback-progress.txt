@@ -1,0 +1,26 @@
+$ POST /api/items/3b11f2d9-5b3c-4a13-a299-6338a8fa61ed/play  (deviceInfo, forceDirectPlay) -> HTTP 200
+  session: 631ccb0e-220f-452a-8dee-f34797528a41 | playMethod: 0 | audioTracks: 4
+$ POST /api/session/<id>/sync   {"currentTime": 185.0, ...} -> HTTP 200
+$ POST /api/session/<id>/close  {"currentTime": 185.0, ...} -> HTTP 200
+$ GET /api/me/progress/3b11f2d9-5b3c-4a13-a299-6338a8fa61ed -> HTTP 200
+{
+  "id": "40b27218-fd31-4b29-84ac-275b935ab950",
+  "userId": "a90a0d26-b0ee-44af-b598-ccc60398fd66",
+  "libraryItemId": "3b11f2d9-5b3c-4a13-a299-6338a8fa61ed",
+  "episodeId": null,
+  "mediaItemId": "a52297a4-ebdd-4c12-a92d-7eeab809af1c",
+  "mediaItemType": "book",
+  "duration": 480.130612,
+  "progress": 0.38531182010948306,
+  "currentTime": 185,
+  "isFinished": false,
+  "hideFromContinueListening": false,
+  "ebookLocation": null,
+  "ebookProgress": 0,
+  "lastUpdate": 1792716002842,
+  "startedAt": 1792716002838,
+  "finishedAt": null
+}
+
+185.0 / 480.130612 = 0.3853 — the stored
+progress fraction is the position divided by the book's length.

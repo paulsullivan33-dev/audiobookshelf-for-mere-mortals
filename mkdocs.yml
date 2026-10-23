@@ -1,0 +1,28 @@
+site_name: Audiobookshelf for Mere Mortals
+site_description: Plain-language self-hosted audiobooks and podcasts with your files on your own disks. One server, libraries and scanning, chapters and metadata, streaming, per-listener progress that survives restarts, podcasts from feeds, and the two-part backup.
+site_url: https://paulsullivan33-dev.github.io/audiobookshelf-for-mere-mortals/
+
+# Guides live at the repo root (nice for GitHub browsing).
+# The deploy workflow copies them into docs/ before building.
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - What Audiobookshelf Is: what-audiobookshelf-is.md
+  - The Moving Parts: the-moving-parts.md
+  - Installing: installing.md
+  - First Admin and Login: first-admin-and-login.md
+  - Libraries and Scanning: libraries-and-scanning.md
+  - Chapters and Metadata: chapters-and-metadata.md
+  - Listening Every Day: listening-every-day.md
+  - Progress and Users: progress-and-users.md
+  - Podcasts: podcasts.md
+  - Ebooks and PDFs: ebooks-and-pdfs.md
+  - Backing Up: backing-up.md
+  - Recipes: recipes.md
+  - The Neighbours: the-neighbours.md
+  - Limits: limits.md
+  - Troubleshooting: troubleshooting.md
+  - Glossary: glossary.md
+  - Writing Criteria: criteria.md

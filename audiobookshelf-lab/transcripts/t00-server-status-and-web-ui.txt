@@ -1,0 +1,20 @@
+$ curl -s http://localhost:13378/status
+{
+  "app": "audiobookshelf",
+  "serverVersion": "2.37.1",
+  "isInit": true,
+  "language": "en-us",
+  "authMethods": [
+    "local"
+  ],
+  "authFormData": {
+    "authLoginCustomMessage": ""
+  }
+}
+
+$ curl -s http://localhost:13378/ | grep -o '<title>[^<]*</title>'
+<title>Audiobookshelf</title>
+
+The status endpoint answers without a login and names the
+server version outright: 2.37.1. The root URL serves the web
+client (its <title> is the product name).

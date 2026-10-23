@@ -1,0 +1,13 @@
+Second user 'theo' (type: user, not root), created by the admin
+with access to the Audiobooks library only. One wrinkle found
+live: a new user is created with accessAllLibraries = true, so
+the admin had to PATCH the user to turn that off before the
+per-library list meant anything.
+
+$ theo GET /api/libraries -> HTTP 200: ['Audiobooks']
+$ theo GET Audiobooks items -> HTTP 200: 2 items
+$ theo GET /api/items/<Quiet Hours, in Private Shelf> -> HTTP 403: Forbidden
+$ theo GET Private Shelf items -> HTTP 403: Forbidden
+
+Fencing is a flat 403 Forbidden — the server does not pretend
+the book doesn't exist (no 404), it says no.

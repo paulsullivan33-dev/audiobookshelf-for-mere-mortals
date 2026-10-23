@@ -1,0 +1,18 @@
+$ curl -s -X POST http://localhost:13378/init \
+    -d '{"newRoot":{"username":"maren","password":"<redacted>"}}'
+(first run, on the empty server) HTTP 200, body: OK
+
+The same call once an admin exists:
+HTTP 500, body: Internal Server Error
+
+$ curl -s -X POST http://localhost:13378/login \
+    -d '{"username":"maren","password":"<redacted>"}'
+{
+  "user": {"id": "a90a0d26-b0ee-44af-b598-ccc60398fd66", "username": "maren",
+           "type": "root", "token": "<redacted>"},
+  "serverSettings": {"version": "2.37.1", ...}
+}
+
+The first account is the root (admin) account. /init answers
+in plain text, not JSON, and refuses to run twice. The login
+token is what every later call carries as a Bearer token.

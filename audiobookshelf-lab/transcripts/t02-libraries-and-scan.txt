@@ -1,0 +1,17 @@
+$ curl -s http://localhost:13378/api/libraries -H 'Authorization: Bearer <redacted>'
+(note: the answer is an object holding a libraries array, not a bare array)
+
+  Audiobooks     mediaType=book    provider=google  id=38da1263-9e68-4bcf-9f58-1eda76edd01e
+      folder: /home/hatch/workspace/audiobookshelf-lab-work/media/Audiobooks
+  Private Shelf  mediaType=book    provider=google  id=59393f3a-59f1-4828-a9e3-c55c47321676
+      folder: /home/hatch/workspace/audiobookshelf-lab-work/media/PrivateShelf
+  Podcasts       mediaType=podcast provider=google  id=b0b9820a-859c-496d-b8ef-3395d570b966
+      folder: /home/hatch/workspace/audiobookshelf-lab-work/media/Podcasts
+
+Re-running a scan (scans are safe to repeat):
+$ curl -s -X POST .../api/libraries/38da1263-9e68-4bcf-9f58-1eda76edd01e/scan -> HTTP 200 OK
+$ curl -s -X POST .../api/libraries/59393f3a-59f1-4828-a9e3-c55c47321676/scan -> HTTP 200 OK
+
+$ curl -s 'http://localhost:13378/api/libraries/<Audiobooks>/items?limit=0' ...
+  - "A Field Guide to Tides" by Tomas Reyes (duration 135s)
+  - "The Lantern Keeper's Daughter" by Imogen Hartley (duration 480.13s)
